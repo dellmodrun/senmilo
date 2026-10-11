@@ -1,5 +1,7 @@
 const $=(s,p=document)=>p.querySelector(s),$$=(s,p=document)=>[...p.querySelectorAll(s)];
 const API_ORIGIN=String(window.CENNOMO_API_ORIGIN||'').replace(/\/$/,'');
+const PUBLIC_TOKEN_MINT='CuYXD3PUkCRi5qCGBYoq8bMUovzcmJpdiCp7VJfTpump';
+const PUBLIC_PUMPFUN_URL='https://pump.fun/coin/CuYXD3PUkCRi5qCGBYoq8bMUovzcmJpdiCp7VJfTpump';
 const R={data:null,gateway:[],operators:[],skills:[],events:[],selected:0,filter:'all',wallet:null,address:'',toast:0,roomTimer:0,roomOperatorId:null,reload:0,wallSignature:''};
 const esc=(v='')=>String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const text=(s,v,p=document)=>{const n=$(s,p);if(n)n.textContent=v};
@@ -15,7 +17,8 @@ function setVerifiedMark(selector,operator){const mark=$(selector);if(mark)mark.
 function swapFrame(img,o,wait){if(!img)return;if(!o?.stream_path){if(!img.classList.contains('connected')&&wait)wait.hidden=false;return}const path=o.stream_path;if(img.dataset.framePath===path||img.dataset.pendingPath===path)return;img.dataset.pendingPath=path;const holder=img.parentElement,oldBuffer=$('.frame-buffer',holder);oldBuffer?.remove();const next=new Image,url=frame(o),kind=img.id==='roomLiveFrame'?'room-live-frame':img.classList.contains('crawl-browser-frame')?'crawl-browser-frame':'operator-live-frame';next.className=`${kind} frame-buffer`;next.alt='';next.onload=()=>{if(img.dataset.pendingPath!==path)return;holder.append(next);requestAnimationFrame(()=>next.classList.add('ready'));setTimeout(()=>{if(img.dataset.pendingPath!==path){next.remove();return}img.src=url;img.dataset.framePath=path;delete img.dataset.pendingPath;img.classList.add('connected');next.remove();if(wait)wait.hidden=true},420)};next.onerror=()=>{if(img.dataset.pendingPath===path)delete img.dataset.pendingPath;if(!img.classList.contains('connected')&&wait)wait.hidden=false};next.src=url}
 
 function configure(){
-  const c=R.data.config,m=c.tokenMint;
+  const c=R.data.config,m=PUBLIC_TOKEN_MINT;
+  c.tokenMint=m;c.pumpfunUrl=PUBLIC_PUMPFUN_URL;
   $$('.ca-pill strong').forEach(n=>n.textContent=m?`${m.slice(0,4)}…${m.slice(-4)}`:'TBA');
   $$('.ca-row code').forEach(n=>n.textContent=m||'TBA');
   $$('a[href*="pump.fun"]').forEach(n=>n.href=c.pumpfunUrl);
