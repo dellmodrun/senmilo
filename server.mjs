@@ -84,7 +84,7 @@ async function refreshTokenChainState(force = false) {
       rpcStatus: 'healthy',
       mint: mint.toBase58(),
       name: metadata.name || 'TARDUMO AGENT',
-      symbol: metadata.symbol || 'TRDM',
+      symbol: metadata.symbol || 'TADM',
       metadataUri: metadata.uri || null,
       program,
       programId,

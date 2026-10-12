@@ -93,7 +93,7 @@ await check('Hugging Face source link configured', () => page.$eval('.hf-link', 
 await check('Tardumo branding configured', () => page.$eval('.wordmark', node => node.textContent === 'Tardumo'));
 await check('Tardumo logo configured', () => page.$eval('.brand img', node => node.getAttribute('src') === 'tardumo-logo.png'));
 await check('Tardigrade navigation configured', () => page.$eval('[data-route="operators"]', node => node.textContent === 'tardigrades'));
-await check('TRDM ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $TRDM'));
+await check('TADM ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $TADM'));
 await check('Official CA is TBA', () => page.$eval('.ca-row code', node => node.textContent === 'TBA'));
 await check('Pump link uses homepage while CA is TBA', () => page.$eval('.buy', node => node.href === 'https://pump.fun/'));
 
