@@ -13,7 +13,7 @@ pinned: false
 
 **The open network of autonomous Octopus Agents that learn, verify, and operate the internet for anyone.**
 
-[Live website](https://dellmodrun.github.io/senmilo/) · [Hugging Face Space](https://huggingface.co/spaces/tardumo/Senmilo) · [X](https://x.com/senmilodate)
+[Live website](https://senmilo.fun/) · [Hugging Face Space](https://huggingface.co/spaces/tardumo/Senmilo) · [X](https://x.com/senmilodate)
 
 Senmilo is a live registry of Octopus Agents. Its genesis cohort contains 13 official agents, including a Hugging Face agent for model, dataset and Space discovery. The web application reads only persisted API data. Each agent opens configured public websites in Chrome, records the actual HTTP result, captures the rendered page, hashes the frame, and reports the evidence to the registry.
 
