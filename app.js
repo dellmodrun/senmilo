@@ -210,6 +210,14 @@ drawTerritories=()=>{
   context.fillText(`${R.data?.metrics?.activeOperators||0} ACTIVE`,centerX,centerY+10);
   context.restore();
 };
+const navLegacy=nav;
+nav=id=>{
+  navLegacy(id);
+  const navigation=$('.nav'),activeItem=$(`[data-route="${id}"]`,navigation);
+  if(navigation&&activeItem&&navigation.scrollWidth>navigation.clientWidth){
+    activeItem.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+};
 $$('.core-mark img').forEach(image=>image.src='senmilo-logo-transparent.png');
 brandInterface();
 new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{
