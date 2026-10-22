@@ -1,10 +1,13 @@
 const $=(s,p=document)=>p.querySelector(s),$$=(s,p=document)=>[...p.querySelectorAll(s)];
 const API_ORIGIN=String(window.CENNOMO_API_ORIGIN||'').replace(/\/$/,'');
+const FRONTEND_CA='C4nCiZCtvLNprgtpeufNkNHPEc6E8RjyQzmN2RLRpump';
+const FRONTEND_PUMPFUN_URL=`https://pump.fun/coin/${FRONTEND_CA}`;
 const R={data:null,gateway:[],operators:[],skills:[],events:[],selected:0,filter:'all',wallet:null,address:'',toast:0,roomTimer:0,roomOperatorId:null,reload:0,wallSignature:''};
 const esc=(v='')=>String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const text=(s,v,p=document)=>{const n=$(s,p);if(n)n.textContent=v};
 const senmiloName=(value='')=>String(value).replace(/tardigrade/gi,match=>match===match.toUpperCase()?'OCTOPUS':match[0]===match[0].toUpperCase()?'Octopus':'octopus');
 function brandSnapshot(snapshot){
+  snapshot.config={...(snapshot.config||{}),tokenMint:FRONTEND_CA,pumpfunUrl:FRONTEND_PUMPFUN_URL};
   snapshot.operators=(snapshot.operators||[]).map(operator=>({...operator,_backendName:operator.name,name:senmiloName(operator.name)}));
   snapshot.skills=(snapshot.skills||[]).map(skill=>({...skill,operator_name:senmiloName(skill.operator_name)}));
   snapshot.events=(snapshot.events||[]).map(event=>({...event,operator_name:senmiloName(event.operator_name)}));
