@@ -31,9 +31,10 @@
 
 html, body, .screen, .route, .panel, .console-route, .live-room, .wallet-modal { background-color: var(--senmilo-black) !important; }
 body { color: var(--senmilo-muted) !important; }
-.hf-link { display: none !important; }
+.wallet-zone .hf-link { display: grid !important; }
+.wallet-zone .github-link { display: none !important; }
 .wallet-zone .x-link { display: grid !important; }
-.github-link svg { fill: currentColor; }
+.hf-link svg { fill: currentColor; }
 .brand { width: 68px !important; min-width: 68px !important; height: 44px !important; padding: 2px 8px !important; place-items: center !important; overflow: hidden !important; background: #000 !important; }
 .brand .cennomo-logo-small { width: 50px !important; height: 38px !important; overflow: hidden !important; border: 0 !important; background: transparent !important; }
 .brand img { width: 100% !important; height: 100% !important; object-fit: contain !important; transform: scale(1.14) !important; filter: drop-shadow(0 0 7px rgba(0,255,87,.2)) !important; }
