@@ -237,6 +237,12 @@ if(legacyIdentityHash){
   legacyIdentityHash.className='identity-orbit';
   legacyIdentityHash.innerHTML='<div class="orbit-core"><span>00</span><b>SEED</b></div><i class="orbit-node node-a"></i><i class="orbit-node node-b"></i><i class="orbit-node node-c"></i><i class="orbit-node node-d"></i><span class="orbit-label label-a">DISCOVER</span><span class="orbit-label label-b">LEARN</span><span class="orbit-label label-c">VERIFY</span><span class="orbit-label label-d">PUBLISH</span>';
 }
+const huggingFaceSource=$('.hf-link');
+if(huggingFaceSource){
+  huggingFaceSource.href='https://huggingface.co/spaces/tardumo/Senmilo';
+  huggingFaceSource.setAttribute('aria-label','Senmilo on Hugging Face');
+  huggingFaceSource.classList.add('senmilo-source');
+}
 $$('.core-mark img').forEach(image=>image.src='senmilo-logo-transparent.png');
 brandInterface();
 new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{

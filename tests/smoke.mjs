@@ -88,7 +88,7 @@ await check('Manual Gateway chapter works', () => page.$eval('#manual-gateway', 
 await page.click('[data-manual-target="deployment"]');
 await check('Manual Deployment chapter works', () => page.$eval('#manual-deployment', node => node.classList.contains('active')));
 
-await check('GitHub source link configured', () => page.$eval('.senmilo-source', node => node.href === 'https://github.com/dellmodrun/senmilo'));
+await check('Hugging Face source link configured', () => page.$eval('.senmilo-source', node => node.href === 'https://huggingface.co/spaces/tardumo/Senmilo'));
 await check('Senmilo branding configured', () => page.$eval('.wordmark', node => node.textContent === 'Senmilo'));
 await check('Senmilo transparent logo configured', () => page.$eval('.brand img', node => node.getAttribute('src') === 'senmilo-logo-transparent.png'));
 await check('Senmilo X link configured', () => page.$eval('.x-link', node => node.href === 'https://x.com/senmilodate'));

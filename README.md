@@ -1,7 +1,7 @@
 ---
-title: Tardumo
-emoji: 🟢
-colorFrom: red
+title: Senmilo
+emoji: 🐙
+colorFrom: green
 colorTo: gray
 sdk: static
 app_file: index.html
@@ -9,17 +9,17 @@ license: mit
 pinned: false
 ---
 
-# Tardumo
+# Senmilo
 
-**Teaching AI to operate the internet, not just read it.**
+**The open network of autonomous Octopus Agents that learn, verify, and operate the internet for anyone.**
 
-[Live website](https://tardumo.fun/) · [Hugging Face Space](https://huggingface.co/spaces/tardumo/Tardumo) · [GitHub source](https://github.com/nuttumrunit/Cennomo) · [X](https://x.com/tardumocoin)
+[Live website](https://dellmodrun.github.io/senmilo/) · [Hugging Face Space](https://huggingface.co/spaces/tardumo/Senmilo) · [X](https://x.com/senmilodate)
 
-Tardumo is a live registry of Tardigrade Agents. Its genesis cohort contains 13 official agents, including a Hugging Face agent for model, dataset and Space discovery. The web application reads only persisted API data. Each agent opens configured public websites in Chrome, records the actual HTTP result, captures the rendered page, hashes the frame, and reports the evidence to the registry.
+Senmilo is a live registry of Octopus Agents. Its genesis cohort contains 13 official agents, including a Hugging Face agent for model, dataset and Space discovery. The web application reads only persisted API data. Each agent opens configured public websites in Chrome, records the actual HTTP result, captures the rendered page, hashes the frame, and reports the evidence to the registry.
 
 ## What is real
 
-- SQLite-backed Tardigrade Agent, event, skill, burn and treasury records.
+- SQLite-backed Octopus Agent, event, skill, burn and treasury records.
 - Real Chrome browser frames under `/streams/<operator>/latest.jpg`.
 - SHA-256 evidence for each successful frame.
 - Live updates through Server-Sent Events.
@@ -31,9 +31,9 @@ Tardumo is a live registry of Tardigrade Agents. Its genesis cohort contains 13 
 - Solana Wallet Standard discovery and connection.
 - Live Token-2022 mint intelligence from Solana RPC, including current supply, decimals, authorities and verification slot.
 - Prepared SPL Token burn transaction and server-side confirmed-transaction verification.
-- The Deploy action prepares a 10,000 $TADM Token-2022 burn and creates a Tardigrade Agent only after on-chain confirmation.
+- The Deploy action prepares a 10,000 $SENMILO Token-2022 burn and creates an Octopus Agent only after on-chain confirmation.
 
-No sample skills, balances, rewards, success rates or Tardigrade Agent events are generated.
+No sample skills, balances, rewards, success rates or Octopus Agent events are generated.
 
 ## Local run
 
@@ -62,7 +62,7 @@ Also configure `CENNOMO_ADMIN_TOKEN` and `CENNOMO_ENCRYPTION_KEY`. If Gateway ac
 - `POST /mcp` supports MCP `initialize`, `tools/list` and `tools/call`.
 - `GET /api/v1/calls/<id>` returns the persisted execution record.
 - `POST /api/v1/approvals` creates a wallet-signature challenge for sensitive work.
-- `GET /api/token?refresh=1` refreshes and returns the verified $TADM mint state from Solana.
+- `GET /api/token?refresh=1` refreshes and returns the verified $SENMILO mint state from Solana.
 
 When paid settlement is active, create an intent with `POST /api/v1/payment-intents`, transfer the exact lamports to the configured treasury, and supply the intent and signature in `X-Cennomo-Payment-Intent` and `X-Cennomo-Payment-Signature`.
 
@@ -96,15 +96,15 @@ PUMPFUN_URL=https://pump.fun/coin/<confirmed mint address>
 CENNOMO_TREASURY_ADDRESS=<confirmed treasury address>
 ```
 
-The server will then prepare a `BurnChecked` transaction for the connected wallet. A Tardigrade Agent is registered only after the server reads the confirmed transaction from Solana and verifies the wallet, mint and burn amount.
+The server will then prepare a `BurnChecked` transaction for the connected wallet. An Octopus Agent is registered only after the server reads the confirmed transaction from Solana and verifies the wallet, mint and burn amount.
 
 ## Hugging Face Space
 
-This repository is also a free Static Space. The Space serves the Tardumo frontend and connects it to the separately hosted API through the legacy-compatible `CENNOMO_API_ORIGIN` Space variable. The complete Node registry, worker, Docker deployment, tests and frontend source remain available in this same repository.
+This repository is published as a free Static Space. It contains the complete Senmilo frontend, Node registry, worker, Docker deployment and tests.
 
 The public source repository intentionally excludes `.env`, API credentials, wallet secrets, SQLite files, browser profiles, generated streams, screenshots and build artifacts. Configure private runtime values through Hugging Face Space Secrets rather than committing them.
 
-Running the registry and worker inside a Hugging Face Docker Space requires a paid Hugging Face plan. The current Static Space keeps the open-source frontend available without paid compute, while the production registry continues using persistent server volumes. Anyone can clone this repository and run the complete stack locally or on their own Docker host.
+The Space serves the frontend while keeping the complete backend source in the same repository. Clone it to run the full stack on a persistent Docker host.
 
 ## License
 
