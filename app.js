@@ -1,13 +1,10 @@
 const $=(s,p=document)=>p.querySelector(s),$$=(s,p=document)=>[...p.querySelectorAll(s)];
 const API_ORIGIN=String(window.CENNOMO_API_ORIGIN||'').replace(/\/$/,'');
-const FRONTEND_CA='C4nCiZCtvLNprgtpeufNkNHPEc6E8RjyQzmN2RLRpump';
-const FRONTEND_PUMPFUN_URL=`https://pump.fun/coin/${FRONTEND_CA}`;
 const R={data:null,gateway:[],operators:[],skills:[],events:[],selected:0,filter:'all',wallet:null,address:'',toast:0,roomTimer:0,roomOperatorId:null,reload:0,wallSignature:''};
 const esc=(v='')=>String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const text=(s,v,p=document)=>{const n=$(s,p);if(n)n.textContent=v};
 const senmiloName=(value='')=>String(value).replace(/tardigrade/gi,match=>match===match.toUpperCase()?'OCTOPUS':match[0]===match[0].toUpperCase()?'Octopus':'octopus');
 function brandSnapshot(snapshot){
-  snapshot.config={...(snapshot.config||{}),tokenMint:FRONTEND_CA,pumpfunUrl:FRONTEND_PUMPFUN_URL};
   snapshot.operators=(snapshot.operators||[]).map(operator=>({...operator,_backendName:operator.name,name:senmiloName(operator.name)}));
   snapshot.skills=(snapshot.skills||[]).map(skill=>({...skill,operator_name:senmiloName(skill.operator_name)}));
   snapshot.events=(snapshot.events||[]).map(event=>({...event,operator_name:senmiloName(event.operator_name)}));
@@ -24,8 +21,8 @@ const brandCopy=value=>String(value)
   .replace(/TARDUMO/g,'SENMILO')
   .replace(/Tardumo/g,'Senmilo')
   .replace(/tardumo/g,'senmilo')
-  .replace(/\$TADM\b/g,'$SENMO')
-  .replace(/\bTADM\b/g,'SENMO');
+  .replace(/\$TADM\b/g,'$SEMO')
+  .replace(/\bTADM\b/g,'SEMO');
 function brandInterface(root=document.body){
   if(!root)return;
   const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
@@ -104,7 +101,7 @@ function renderTreasury(){
   text('#treasuryPhase',phase);
   text('#tokenName',token.name||'TBA');
   text('#tokenSymbol',token.symbol||'TBA');
-  text('#tokenSupply',token.supply!=null?`${Number(token.supply).toLocaleString('en-US',{maximumFractionDigits:6})} ${token.symbol||'SENMO'}`:launched?'CHECKING':'TBA');
+  text('#tokenSupply',token.supply!=null?`${Number(token.supply).toLocaleString('en-US',{maximumFractionDigits:6})} ${token.symbol||'SEMO'}`:launched?'CHECKING':'TBA');
   text('#tokenDecimals',token.decimals??(launched?'CHECKING':'TBA'));
   text('#tokenProgram',token.program||(launched?'CHECKING':'TBA'));
   text('#tokenMintAuthority',token.mintAuthority?`${token.mintAuthority.slice(0,4)}…${token.mintAuthority.slice(-4)}`:chainVerified?'REVOKED':launched?'CHECKING':'TBA');
@@ -135,7 +132,7 @@ function renderTreasury(){
   $('#payoutList').innerHTML=`<div class="treasury-status-card"><small>CURRENT RECORDED WINDOW</small><b>${m.burns} confirmed burns · ${Number(m.tokensBurned).toLocaleString()} tokens</b><p>${notice}</p></div>`;
   const rows=[
     ['official token CA',mint||'TBA',chainVerified?'on-chain verified':launched?'checking':'awaiting'],
-    ['current token supply',token.supply!=null?`${Number(token.supply).toLocaleString('en-US',{maximumFractionDigits:6})} ${token.symbol||'SENMO'}`:'not available',chainVerified?'confirmed RPC':'checking'],
+    ['current token supply',token.supply!=null?`${Number(token.supply).toLocaleString('en-US',{maximumFractionDigits:6})} ${token.symbol||'SEMO'}`:'not available',chainVerified?'confirmed RPC':'checking'],
     ['token program',token.program||'not available',chainVerified?'confirmed RPC':'checking'],
     ['mint / freeze authority',chainVerified?(token.authoritiesRevoked?'revoked / revoked':'authority present'):'not available',chainVerified?'confirmed RPC':'checking'],
     ['launch / tax address',address||'TBA',treasuryReady?'published':'awaiting'],
@@ -159,7 +156,7 @@ function walletList(){const list=choices();wo.innerHTML='';list.forEach(c=>{cons
 function walletOpen(){walletList();wm.classList.add('open');wm.setAttribute('aria-hidden','false')}function walletClose(){wm.classList.remove('open');wm.setAttribute('aria-hidden','true')}
 async function connect(c){wb.disabled=true;wb.textContent='connecting…';try{if(c.type==='standard'){const r=await c.wallet.features['standard:connect'].connect(),a=r?.accounts?.[0]||c.wallet.accounts?.[0];if(!a?.address)throw Error('wallet returned no account');setWallet(a.address,c,a)}else{const r=await c.provider.connect(),a=(r?.publicKey||c.provider.publicKey)?.toString();if(!a)throw Error('wallet returned no account');setWallet(a,c)}walletClose();toast(`${c.name} connected`)}catch(e){setWallet();toast(e.code===4001?'wallet connection cancelled':e.message)}finally{wb.disabled=false}}
 async function disconnect(){try{if(R.wallet?.choice.type==='standard')await R.wallet.choice.wallet.features['standard:disconnect']?.disconnect();else await R.wallet?.choice.provider?.disconnect?.()}catch{}setWallet();toast('wallet disconnected')}
-function deployState(){const b=$('#spawnButton'),c=R.data?.config;if(!b)return;const alias=$('#operatorAlias')?.value.trim(),steps=$$('.spawn-steps li'),ready=!!c?.deployEnabled&&!!R.address;text('#deployWalletStatus',R.address?'CONNECTED':'NOT CONNECTED');text('#deployMintStatus',c?.tokenMint?'CONFIGURED':'TBA');text('#deployWorkerStatus',R.data?`${R.data.metrics.activeOperators}/${R.data.metrics.operators} ONLINE`:'CHECKING');text('#deployReadiness',!c?.deployEnabled?'TOKEN CA REQUIRED':!R.address?'WALLET REQUIRED':'READY TO SIGN');steps.forEach((step,index)=>{step.classList.remove('active','complete','locked');if(index<2)step.classList.add('complete');else if(index===2)step.classList.add(ready?'active':'locked');else step.classList.add('locked')});text('.spawn-preview>.panel-head b',ready&&alias?'READY TO COMMIT':'NOT COMMITTED');if(!c?.deployEnabled){b.disabled=true;b.classList.remove('ready');b.textContent='token CA TBA · deployment locked'}else if(!R.address){b.disabled=false;b.classList.remove('ready');b.textContent='connect wallet to continue'}else{b.disabled=false;b.classList.add('ready');b.textContent=`burn ${Number(c.burnAmount).toLocaleString()} $SENMO · wake`}}
+function deployState(){const b=$('#spawnButton'),c=R.data?.config;if(!b)return;const alias=$('#operatorAlias')?.value.trim(),steps=$$('.spawn-steps li'),ready=!!c?.deployEnabled&&!!R.address;text('#deployWalletStatus',R.address?'CONNECTED':'NOT CONNECTED');text('#deployMintStatus',c?.tokenMint?'CONFIGURED':'TBA');text('#deployWorkerStatus',R.data?`${R.data.metrics.activeOperators}/${R.data.metrics.operators} ONLINE`:'CHECKING');text('#deployReadiness',!c?.deployEnabled?'TOKEN CA REQUIRED':!R.address?'WALLET REQUIRED':'READY TO SIGN');steps.forEach((step,index)=>{step.classList.remove('active','complete','locked');if(index<2)step.classList.add('complete');else if(index===2)step.classList.add(ready?'active':'locked');else step.classList.add('locked')});text('.spawn-preview>.panel-head b',ready&&alias?'READY TO COMMIT':'NOT COMMITTED');if(!c?.deployEnabled){b.disabled=true;b.classList.remove('ready');b.textContent='token CA TBA · deployment locked'}else if(!R.address){b.disabled=false;b.classList.remove('ready');b.textContent='connect wallet to continue'}else{b.disabled=false;b.classList.add('ready');b.textContent=`burn ${Number(c.burnAmount).toLocaleString()} $SEMO · wake`}}
 const from64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));function b58(bytes){const a='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',d=[0];for(const b of bytes){let c=b;for(let i=0;i<d.length;i++){c+=d[i]<<8;d[i]=c%58;c=Math.floor(c/58)}while(c){d.push(c%58);c=Math.floor(c/58)}}let r='';for(const b of bytes){if(!b)r+='1';else break}return r+d.reverse().map(x=>a[x]).join('')}
 async function deploy(){const c=R.data?.config;if(!c?.deployEnabled)return toast('Deployment is locked until the real token CA is configured.');if(!R.address)return walletOpen();if(R.wallet.choice.type!=='standard')return toast('Wallet Standard signing is required for the burn.');const signer=R.wallet.choice.wallet.features['solana:signAndSendTransaction'];if(!signer)return toast('This wallet cannot sign Solana transactions.');const alias=$('#operatorAlias').value.trim().toLowerCase(),territory=$('#territorySelect').value.split(' ')[0].toLowerCase(),button=$('#spawnButton');button.disabled=true;try{button.textContent='preparing burn…';const p=await api('/operators/prepare-burn',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wallet:R.address,alias,territory})});button.textContent='confirm burn in wallet…';const outs=await signer.signAndSendTransaction({account:R.wallet.account,chain:p.chain,transaction:from64(p.transaction),options:{commitment:'confirmed'}}),o=Array.isArray(outs)?outs[0]:outs,sig=typeof o.signature==='string'?o.signature:b58(o.signature);button.textContent='verifying on-chain…';await api('/operators/confirm-burn',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wallet:R.address,intentId:p.intentId,signature:sig})});toast('Burn confirmed. Tardigrade Agent queued.');await load(true);nav('operators')}catch(e){toast(e.message)}finally{deployState()}}
 
