@@ -243,6 +243,7 @@ if(huggingFaceSource){
   huggingFaceSource.setAttribute('aria-label','Senmilo on Hugging Face');
   huggingFaceSource.classList.add('senmilo-source');
 }
+$('.github-link')?.remove();
 $$('.core-mark img').forEach(image=>image.src='senmilo-logo-transparent.png');
 brandInterface();
 new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{
