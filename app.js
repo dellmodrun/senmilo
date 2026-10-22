@@ -32,6 +32,17 @@ function brandInterface(root=document.body){
 const age=v=>{if(!v)return'never';const s=Math.max(0,Math.floor((Date.now()-new Date(v))/1000));return s<60?`${s}s`:s<3600?`${Math.floor(s/60)}m`:s<86400?`${Math.floor(s/3600)}h`:`${Math.floor(s/86400)}d`};
 function toast(m){const n=$('#toast');n.textContent=m;n.classList.add('show');clearTimeout(R.toast);R.toast=setTimeout(()=>n.classList.remove('show'),2600)}
 async function api(path,options={}){const r=await fetch(`${API_ORIGIN}/api${path}`,{...options,headers:{Accept:'application/json',...(options.headers||{})}}),b=await r.json().catch(()=>({}));if(!r.ok)throw Error(b.error||`request failed (${r.status})`);return b}
+async function registryData(){
+  try{return await Promise.all([api('/snapshot'),api('/v1/skills')]);}
+  catch(primaryError){
+    const [snapshotResponse,skillsResponse]=await Promise.all([
+      fetch('./snapshot.json',{cache:'no-store'}),
+      fetch('./skills.json',{cache:'no-store'})
+    ]);
+    if(!snapshotResponse.ok||!skillsResponse.ok)throw primaryError;
+    return Promise.all([snapshotResponse.json(),skillsResponse.json()]);
+  }
+}
 const active=s=>!['offline','dead','queued'].includes(s);
 const frame=o=>o?.stream_path?`${API_ORIGIN}${o.stream_path}`:'';
 const videoStream=o=>o?`${API_ORIGIN}/api/operators/${encodeURIComponent(o._backendName||o.name)}/video.webm?session=${crypto.randomUUID?.()||Date.now()}`:'';
@@ -134,7 +145,7 @@ function renderTreasury(){
 }
 async function refreshToken(){const b=$('#tokenRefresh');if(!b)return;if(!R.data?.config?.tokenMint)return toast('Token CA is TBA');b.disabled=true;b.textContent='checking…';try{R.data.token=await api('/token?refresh=1');renderTreasury();toast(R.data.token.status==='verified'?'Token state verified on Solana':'Solana RPC is temporarily degraded')}catch(e){toast(`token refresh failed: ${e.message}`)}finally{b.disabled=false;b.textContent='refresh chain'}}
 function render(){R.operators=R.data.operators;R.skills=R.data.skills;R.events=R.data.events;configure();selectOperator(Math.min(R.selected,R.operators.length-1));renderTable();renderWall();renderEvents();renderSkills($('#skillSearch')?.value||'');renderGateway();renderTerritories();renderTreasury();deployState()}
-async function load(quiet=false){try{const [snapshot,gateway]=await Promise.all([api('/snapshot'),api('/v1/skills')]);R.data=brandSnapshot(snapshot);R.gateway=gateway.data||[];document.documentElement.dataset.api='online';render();brandInterface()}catch(e){document.documentElement.dataset.api='offline';text('.feed-label','API offline');if(!quiet)toast(`network unavailable: ${e.message}`)}}
+async function load(quiet=false){try{const [snapshot,gateway]=await registryData();R.data=brandSnapshot(snapshot);R.gateway=gateway.data||[];document.documentElement.dataset.api='online';render();brandInterface()}catch(e){document.documentElement.dataset.api='offline';text('.feed-label','API offline');if(!quiet)toast(`network unavailable: ${e.message}`)}}
 function events(){const s=new EventSource(`${API_ORIGIN}/api/events/stream`);s.addEventListener('snapshot',()=>{clearTimeout(R.reload);R.reload=setTimeout(()=>load(true),900)});s.addEventListener('frame',event=>{try{const data=JSON.parse(event.data),o=R.operators.find(item=>item.id===data.operatorId||item.name===data.operator);if(!o)return;o.stream_path=data.streamPath;o.last_seen=data.observedAt;o.telemetry=data.telemetry;const c=$(`[data-operator-id="${o.id}"]`);if(c){swapFrame($('.operator-live-frame',c),o,$('.feed-awaiting',c));text('[data-role="seen"]','live',c);text('[data-role="event"]',`${data.telemetry?.phase||'reading'} · ${data.observedAt.slice(11,19)} UTC`,c)}if(R.roomOperatorId===o.id){text('#roomSignal','VIDEO · '+String(data.telemetry?.phase||'reading').replaceAll('-',' ').toUpperCase());text('#roomUrl',data.telemetry?.currentUrl||o.target_url);try{text('#roomEndpoint',new URL(data.telemetry?.currentUrl||o.target_url).pathname||'/')}catch{}}setTimeout(()=>{if(R.operators[R.selected]?.id===o.id)renderVision($('#stageVision'),data.telemetry);const current=$(`[data-operator-id="${o.id}"]`);if(current)renderVision($('[data-role="vision"]',current),data.telemetry);if(R.roomOperatorId===o.id)renderVision($('#roomVision'),data.telemetry)},430)}catch{}});s.onerror=()=>document.documentElement.dataset.stream='offline';s.onopen=()=>document.documentElement.dataset.stream='online'}
 
 const wb=$('#connectWallet'),wm=$('#walletModal'),wo=$('#walletOptions'),we=$('#walletEmpty');
