@@ -1,4 +1,4 @@
-name: Deploy Tardumo backend
+name: Deploy Senmilo backend
 
 on:
   workflow_dispatch:
@@ -24,7 +24,7 @@ jobs:
         env:
           SERVER_HOST: ${{ vars.CENNOMO_SERVER_HOST }}
           BACKEND_HOST: ${{ vars.CENNOMO_BACKEND_HOST }}
-          WEB_ORIGIN: https://nuttumrunit.github.io,https://tardumo-tardumo.static.hf.space,https://tardumo.fun,https://www.tardumo.fun
+          WEB_ORIGIN: https://dellmodrun.github.io,https://nuttumrunit.github.io,https://tardumo-tardumo.static.hf.space,https://tardumo.fun,https://www.tardumo.fun
         run: |
           ssh -i ~/.ssh/cennomo -o IdentitiesOnly=yes root@"$SERVER_HOST" \
             "CENNOMO_HOST='$BACKEND_HOST' CENNOMO_WEB_ORIGIN='$WEB_ORIGIN' bash -s" <<'REMOTE'
@@ -36,8 +36,9 @@ jobs:
             systemctl enable --now docker
           fi
           if [[ ! -d /opt/cennomo/.git ]]; then
-            git clone https://github.com/nuttumrunit/Cennomo.git /opt/cennomo
+            git clone https://github.com/dellmodrun/senmilo.git /opt/cennomo
           else
+            git -C /opt/cennomo remote set-url origin https://github.com/dellmodrun/senmilo.git
             git -C /opt/cennomo pull --ff-only
           fi
           cd /opt/cennomo

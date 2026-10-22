@@ -48,7 +48,10 @@ const config = {
   treasuryAddress: process.env.CENNOMO_TREASURY_ADDRESS || '',
   defaultCallFeeLamports: Math.max(0, Number(process.env.CENNOMO_DEFAULT_CALL_FEE_LAMPORTS || 0)),
   gatewayApiKeys: new Set(String(process.env.CENNOMO_GATEWAY_API_KEYS || '').split(',').map(value => value.trim()).filter(Boolean)),
-  webOrigins: new Set(String(process.env.CENNOMO_WEB_ORIGINS || '').split(',').map(value => value.trim().replace(/\/$/, '')).filter(Boolean)),
+  webOrigins: new Set([
+    ...String(process.env.CENNOMO_WEB_ORIGINS || '').split(',').map(value => value.trim().replace(/\/$/, '')).filter(Boolean),
+    'https://dellmodrun.github.io'
+  ]),
   workerIntervalMs: Math.max(15_000, Number(process.env.CENNOMO_WORKER_INTERVAL_MS || 60_000))
 };
 
@@ -83,8 +86,8 @@ async function refreshTokenChainState(force = false) {
       status: 'verified',
       rpcStatus: 'healthy',
       mint: mint.toBase58(),
-      name: metadata.name || 'TARDUMO AGENT',
-      symbol: metadata.symbol || 'TADM',
+      name: metadata.name || 'SENMILO AGENT',
+      symbol: metadata.symbol || 'SENMILO',
       metadataUri: metadata.uri || null,
       program,
       programId,
@@ -326,6 +329,36 @@ try {
   throw error;
 }
 
+// Keep every existing registry ID and its evidence while presenting the
+// renamed Senmilo octopus cohort. This also upgrades databases deployed under
+// the previous public names without recreating operators or losing history.
+const officialOctopusRenames = [
+  ['jupiter-tardigrade-01', 'jupiter-octopus-01'],
+  ['wormhole-tardigrade-02', 'wormhole-octopus-02'],
+  ['aave-tardigrade-03', 'aave-octopus-03'],
+  ['github-tardigrade-04', 'github-octopus-04'],
+  ['notion-tardigrade-05', 'notion-octopus-05'],
+  ['blender-tardigrade-06', 'blender-octopus-06'],
+  ['shopify-tardigrade-07', 'shopify-octopus-07'],
+  ['discord-tardigrade-08', 'discord-octopus-08'],
+  ['stripe-tardigrade-09', 'stripe-octopus-09'],
+  ['linear-tardigrade-10', 'linear-octopus-10'],
+  ['figma-tardigrade-11', 'figma-octopus-11'],
+  ['telegram-tardigrade-12', 'telegram-octopus-12'],
+  ['huggingface-tardigrade-13', 'huggingface-octopus-13']
+];
+db.exec('BEGIN IMMEDIATE');
+try {
+  for (const [previousName, octopusName] of officialOctopusRenames) {
+    const operator = findOperatorByName.get(previousName);
+    if (operator && !findOperatorByName.get(octopusName)) renameOfficialTardigrade.run(octopusName, operator.id);
+  }
+  db.exec('COMMIT');
+} catch (error) {
+  db.exec('ROLLBACK');
+  throw error;
+}
+
 const now = () => new Date().toISOString();
 const vaultKey = config.encryptionKey ? createHash('sha256').update(config.encryptionKey).digest() : null;
 function encryptSecret(secret) {
@@ -397,9 +430,9 @@ function operatorRows() {
       (SELECT COUNT(*) FROM skills s WHERE s.operator_id=o.id AND s.state='verified') AS verified_skills
     FROM operators o
     ORDER BY CASE o.name
-      WHEN 'jupiter-tardigrade-01' THEN 0
-      WHEN 'wormhole-tardigrade-02' THEN 1
-      WHEN 'aave-tardigrade-03' THEN 2
+      WHEN 'jupiter-octopus-01' THEN 0
+      WHEN 'wormhole-octopus-02' THEN 1
+      WHEN 'aave-octopus-03' THEN 2
       ELSE 3
     END, o.id
   `).all();
@@ -660,14 +693,14 @@ function createApproval(body) {
   const operator = db.prepare('SELECT * FROM operators WHERE name=?').get(body.operator);
   if (!operator) throw Object.assign(new Error('operator not found'), { status: 404 });
   const source = sourceFor(operator.name, operator.territory);
-  if (!source?.capabilities?.includes(body.capability)) throw Object.assign(new Error('capability is not declared by this Tardigrade Agent'), { status: 400 });
+  if (!source?.capabilities?.includes(body.capability)) throw Object.assign(new Error('capability is not declared by this Octopus Agent'), { status: 400 });
   let wallet;
   try { wallet = new PublicKey(body.wallet).toBase58(); }
   catch { throw Object.assign(new Error('invalid wallet address'), { status: 400 }); }
   const inputHash = createHash('sha256').update(JSON.stringify(body.input || {})).digest('hex');
   const id = randomUUID();
   const expiresAt = new Date(Date.now() + 10 * 60_000).toISOString();
-  const challenge = `Tardumo authorization\nApproval: ${id}\nTardigrade Agent: ${operator.name}\nCapability: ${body.capability}\nInput SHA-256: ${inputHash}\nExpires: ${expiresAt}`;
+  const challenge = `Senmilo authorization\nApproval: ${id}\nOctopus Agent: ${operator.name}\nCapability: ${body.capability}\nInput SHA-256: ${inputHash}\nExpires: ${expiresAt}`;
   db.prepare('INSERT INTO approvals(id,operator_id,capability,wallet,input_hash,challenge,status,expires_at,created_at) VALUES(?,?,?,?,?,?,\'pending\',?,?)')
     .run(id, operator.id, body.capability, wallet, inputHash, challenge, expiresAt, now());
   return { approvalId: id, operator: operator.name, capability: body.capability, wallet, inputHash, challenge, expiresAt };
@@ -734,7 +767,7 @@ async function executeGatewaySkill(skill, input = {}, payment = null) {
       method: manifest.method || 'GET', redirect: 'follow', signal: AbortSignal.timeout(20_000),
       headers: {
         Accept: manifest.responseType === 'html' ? 'text/html,application/xhtml+xml' : 'application/json',
-        'User-Agent': 'TardumoGateway/1.0 (+https://tardumo.fun/)',
+        'User-Agent': 'SenmiloGateway/1.0 (+https://dellmodrun.github.io/senmilo/)',
         ...(manifest.body ? { 'Content-Type': 'application/json' } : {})
       },
       ...(manifest.body ? { body: JSON.stringify(manifest.body) } : {})
@@ -789,7 +822,7 @@ async function mcp(request, response) {
   const message = await readJson(request, 128_000);
   const id = message.id ?? null;
   const reply = result => sendJson(response, 200, { jsonrpc: '2.0', id, result });
-  if (message.method === 'initialize') return reply({ protocolVersion: '2025-06-18', capabilities: { tools: { listChanged: true } }, serverInfo: { name: 'cennomo-gateway', version: '1.0.0' } });
+  if (message.method === 'initialize') return reply({ protocolVersion: '2025-06-18', capabilities: { tools: { listChanged: true } }, serverInfo: { name: 'senmilo-gateway', version: '1.0.0' } });
   if (message.method === 'notifications/initialized') return response.writeHead(202).end();
   if (message.method === 'ping') return reply({});
   if (message.method === 'tools/list') return reply({ tools: gatewayCatalog().map(skill => ({ name: skill.name, description: skill.description, inputSchema: skill.inputSchema, annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true } })) });
@@ -924,7 +957,7 @@ async function verifyBurn(signature, wallet) {
     const uiAmount = Number(info.tokenAmount?.uiAmountString ?? info.tokenAmount?.uiAmount ?? NaN);
     return info.authority === wallet && info.mint === config.tokenMint && uiAmount >= config.burnAmount;
   });
-  if (!valid) throw Object.assign(new Error('transaction does not contain the required TARDUMO burn'), { status: 409 });
+  if (!valid) throw Object.assign(new Error('transaction does not contain the required SENMILO burn'), { status: 409 });
   return transaction;
 }
 
@@ -1309,7 +1342,7 @@ const scheduler = setInterval(() => {
 }, 15_000);
 
 server.listen(config.port, config.host, () => {
-  console.log(`Tardumo API and web server: http://${config.host}:${config.port}`);
+  console.log(`Senmilo API and web server: http://${config.host}:${config.port}`);
   console.log(`Solana cluster: ${config.cluster}; token mint: ${config.tokenMint || 'TBA'}`);
 });
 

@@ -1,0 +1,106 @@
+:root {
+  --senmilo-green: #00ff57;
+  --senmilo-green-soft: #7dffa9;
+  --senmilo-green-dim: #16883d;
+  --senmilo-black: #000;
+  --senmilo-panel: #030604;
+  --senmilo-panel-2: #071009;
+  --senmilo-line: #183522;
+  --senmilo-line-soft: rgba(0,255,87,.2);
+  --senmilo-white: #f4f7f5;
+  --senmilo-muted: #7f9185;
+  --cyan: var(--senmilo-green);
+  --cyan2: var(--senmilo-green-dim);
+  --blue: var(--senmilo-green);
+  --orange: var(--senmilo-green);
+  --amber: var(--senmilo-green-soft);
+  --green: var(--senmilo-green);
+  --pink: var(--senmilo-green-soft);
+  --term-bg: var(--senmilo-black);
+  --term-black: var(--senmilo-black);
+  --term-panel: var(--senmilo-panel);
+  --term-panel-2: var(--senmilo-panel-2);
+  --term-amber: var(--senmilo-green);
+  --term-hot: var(--senmilo-green-soft);
+  --term-paper: var(--senmilo-white);
+  --term-muted: var(--senmilo-muted);
+  --term-dim: #405448;
+  --term-line: var(--senmilo-line);
+  --term-line-soft: var(--senmilo-line-soft);
+}
+
+html, body, .screen, .route, .panel, .console-route, .live-room, .wallet-modal { background-color: var(--senmilo-black) !important; }
+body { color: var(--senmilo-muted) !important; }
+.x-link, .hf-link { display: none !important; }
+.github-link svg { fill: currentColor; }
+.brand { overflow: hidden; background: #000 !important; }
+.brand .cennomo-logo-small { width: 52px !important; height: 52px !important; border: 0 !important; background: #000 !important; }
+.brand img, .core-mark img { width: 100% !important; height: 100% !important; object-fit: cover !important; filter: none !important; }
+
+.nav-item.active, .nav-item:hover, .buy, .spawn-button:not(:disabled),
+.hero-actions .primary, .wallet-option:hover, .skill-row button:hover {
+  border-color: var(--senmilo-green) !important;
+  background: var(--senmilo-green) !important;
+  color: #001a09 !important;
+}
+.connect, .ca-pill, .social, .hero-actions .secondary, .skill-row button,
+.wall-filters button, .view-switch button, .manual-index button {
+  border-color: var(--senmilo-line) !important;
+}
+.connect:hover, .ca-pill:hover, .social:hover, .manual-index button.active,
+.wall-filters button.active, .view-switch button.active {
+  border-color: var(--senmilo-green) !important;
+  color: var(--senmilo-green) !important;
+  background: rgba(0,255,87,.08) !important;
+}
+
+.route-command > b, .route-command em b, .wordmark, .lede b, .crawl-inline-stats b:last-child,
+.feed-label:before, .stage-title span, .browser-chrome b, .crawl-tail strong,
+.statusbar b, .statusbar i, .panel-head b, .section-head > b, .territory-item em,
+.treasury-total strong i, .burn-card b, .doc-kicker, .manual-doc h3,
+.identity-console-head > b, .identity-console-head small, .room-identity small,
+.room-identity > span, .live-room-head b, .live-room-head i, .gateway-live,
+.token-chain-panel header b, .token-chain-panel header i, .allocation-ledger .accent,
+.treasury-address-card code, .ca-row span, .ca-row button, .ca-pill strong {
+  color: var(--senmilo-green) !important;
+}
+.status-dot, .monitor-dot, .gateway-live i, .room-identity i, .statusbar i,
+.territory-foot i, .verified-stream-mark, .token-chain-panel header i {
+  background: var(--senmilo-green) !important;
+  box-shadow: 0 0 12px rgba(0,255,87,.65) !important;
+}
+
+.topbar, .statusbar, .route-command, .panel-head, .section-head, .wall-controls,
+.operator-monitor, .monitor-screen, .skill-row, .territory-item, .treasury-total,
+.token-chain-panel, .treasury-address-card, .spawn-steps, .burn-card, .identity-console,
+.manual-index button, .manual-code, .manual-detail-grid article, .wallet-dialog,
+.live-room-head, .live-room-foot, .room-side, .broadcast {
+  border-color: var(--senmilo-line) !important;
+}
+.operator-wall, .monitor-grid, .territory-layout, .treasury-layout, .spawn-layout,
+.gateway-layout, .skills-panel, .manual-layout { background: var(--senmilo-line) !important; }
+
+.wordmark { color: var(--senmilo-white) !important; text-shadow: 0 0 36px rgba(0,255,87,.12); }
+.hero-brand:before, .territory-map {
+  background-image: radial-gradient(circle,rgba(0,255,87,.22) 1px,transparent 1px) !important;
+}
+.reward-note, .ca-row, .manual-code, .gateway-code, .token-chain-panel,
+.treasury-address-card, .burn-card { background: #010502 !important; }
+.reward-note { border-color: var(--senmilo-line) !important; }
+.spawn-steps li.active, .manual-index button.active, .wall-filters button.active,
+.view-switch button.active { background: rgba(0,255,87,.08) !important; }
+.identity-hash { background: linear-gradient(rgba(0,255,87,.035) 1px,transparent 1px) !important; }
+.identity-hash i { border-color: var(--senmilo-green) !important; background: linear-gradient(180deg,rgba(0,255,87,.34),rgba(0,255,87,.02)) !important; }
+.health i, .alloc-row i, .contribution-weights i, .ascii-meter i {
+  filter: hue-rotate(105deg) saturate(1.8) brightness(1.25);
+}
+.operator-monitor:hover:after, .field select:focus, .field input:focus,
+.live-room, .wallet-dialog { border-color: var(--senmilo-green) !important; }
+.feed-reticle i, .verified-stream-mark { border-color: var(--senmilo-green) !important; }
+::selection { background: var(--senmilo-green); color: #001a09; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { border-color: #000; background: #174528; }
+
+@media (max-width: 760px) {
+  .brand .cennomo-logo-small { width: 42px !important; height: 42px !important; }
+}

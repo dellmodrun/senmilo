@@ -19,7 +19,7 @@ await page.goto(base, { waitUntil: 'networkidle2', timeout: 30_000 });
 await page.waitForFunction(() => document.documentElement.dataset.api === 'online', { timeout: 15_000 });
 await check('API health', () => page.evaluate(() => fetch('/api/health').then(r => r.ok)));
 await check('Live route active', () => page.$eval('#route-live', node => node.classList.contains('active')));
-await check('Real Tardigrade Agent selected', () => page.$eval('#operatorName', node => node.textContent !== 'no tardigrade registered'));
+await check('Real Octopus Agent selected', () => page.$eval('#operatorName', node => node.textContent !== 'no octopus registered'));
 await check('Live frame URL', () => page.$eval('.crawl-browser-frame', node => Boolean(node.getAttribute('src'))));
 
 for (const route of ['operators', 'skills', 'gateway', 'territories', 'treasury', 'deploy', 'manual', 'live']) {
@@ -29,8 +29,8 @@ for (const route of ['operators', 'skills', 'gateway', 'territories', 'treasury'
 }
 
 await page.click('[data-route="operators"]');
-await check('Tardigrade Agent cards rendered', () => page.$$eval('#monitorGrid .operator-monitor', nodes => nodes.length === 13));
-await check('Official crypto tardigrades lead first row', () => page.$$eval('#monitorGrid .operator-monitor header span', nodes => nodes.slice(0, 3).map(node => node.textContent).every((value, index) => value.includes(['jupiter-tardigrade-01','wormhole-tardigrade-02','aave-tardigrade-03'][index]))));
+await check('Octopus Agent cards rendered', () => page.$$eval('#monitorGrid .operator-monitor', nodes => nodes.length === 13));
+await check('Official crypto octopuses lead first row', () => page.$$eval('#monitorGrid .operator-monitor header span', nodes => nodes.slice(0, 3).map(node => node.textContent).every((value, index) => value.includes(['jupiter-octopus-01','wormhole-octopus-02','aave-octopus-03'][index]))));
 await page.waitForFunction(() => [...document.querySelectorAll('#monitorGrid .operator-live-frame')].slice(0, 3).every(image => image.naturalWidth > 0));
 await check('First-row live frames render', () => page.$$eval('#monitorGrid .operator-live-frame', nodes => nodes.slice(0, 3).every(image => image.naturalWidth > 0)));
 await page.click('#monitorGrid .operator-monitor');
@@ -39,7 +39,7 @@ await check('Live room has real operator', () => page.$eval('#roomName', node =>
 await page.click('#closeLive');
 await check('Live room closes', () => page.$eval('#liveRoom', node => !node.classList.contains('open')));
 await page.click('[data-wall-filter="degrading"]');
-await check('Tardigrade filter responds', () => page.$$eval('#monitorGrid .operator-monitor', nodes => nodes.every(node => node.dataset.state === 'degrading')));
+await check('Octopus filter responds', () => page.$$eval('#monitorGrid .operator-monitor', nodes => nodes.every(node => node.dataset.state === 'degrading')));
 await page.click('[data-wall-filter="all"]');
 
 await page.click('[data-route="skills"]');
@@ -88,12 +88,11 @@ await check('Manual Gateway chapter works', () => page.$eval('#manual-gateway', 
 await page.click('[data-manual-target="deployment"]');
 await check('Manual Deployment chapter works', () => page.$eval('#manual-deployment', node => node.classList.contains('active')));
 
-await check('X link configured', () => page.$eval('.x-link', node => node.href === 'https://x.com/tardumocoin'));
-await check('Hugging Face source link configured', () => page.$eval('.hf-link', node => node.href === 'https://huggingface.co/spaces/tardumo/Tardumo'));
-await check('Tardumo branding configured', () => page.$eval('.wordmark', node => node.textContent === 'Tardumo'));
-await check('Tardumo logo configured', () => page.$eval('.brand img', node => node.getAttribute('src') === 'tardumo-logo.png'));
-await check('Tardigrade navigation configured', () => page.$eval('[data-route="operators"]', node => node.textContent === 'tardigrades'));
-await check('TADM ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $TADM'));
+await check('GitHub source link configured', () => page.$eval('.senmilo-source', node => node.href === 'https://github.com/dellmodrun/senmilo'));
+await check('Senmilo branding configured', () => page.$eval('.wordmark', node => node.textContent === 'Senmilo'));
+await check('Senmilo logo configured', () => page.$eval('.brand img', node => node.getAttribute('src') === 'senmilo-logo.png'));
+await check('Octopus navigation configured', () => page.$eval('[data-route="operators"]', node => node.textContent === 'octopuses'));
+await check('SENMILO ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $SENMILO'));
 await check('Official CA is TBA', () => page.$eval('.ca-row code', node => node.textContent === 'TBA'));
 await check('Pump link uses homepage while CA is TBA', () => page.$eval('.buy', node => node.href === 'https://pump.fun/'));
 
@@ -102,7 +101,7 @@ await page.goto(`${base}#live`, { waitUntil: 'networkidle2', timeout: 30_000 });
 await page.waitForFunction(() => document.documentElement.dataset.api === 'online', { timeout: 15_000 });
 await check('Mobile page has no body overflow', () => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
 await page.click('[data-route="operators"]');
-await check('Mobile Tardigrades renders', () => page.$$eval('#monitorGrid .operator-monitor', nodes => nodes.length === 13));
+await check('Mobile Octopuses renders', () => page.$$eval('#monitorGrid .operator-monitor', nodes => nodes.length === 13));
 await page.click('[data-route="deploy"]');
 await check('Mobile Deploy renders', () => page.$eval('#spawnButton', node => getComputedStyle(node).display !== 'none'));
 await page.click('[data-route="manual"]');
