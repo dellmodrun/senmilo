@@ -8,9 +8,7 @@ on:
     - cron: '*/5 * * * *'
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -18,9 +16,6 @@ concurrency:
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,10 +27,8 @@ jobs:
       - run: npm run build:pages
         env:
           CENNOMO_API_ORIGIN: ${{ vars.CENNOMO_API_ORIGIN }}
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - name: Publish gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist-pages
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist-pages
