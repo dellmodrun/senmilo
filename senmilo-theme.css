@@ -247,6 +247,16 @@ body:after,
 .browser-chrome i:nth-child(3) { background:#1d6b37 !important; }
 #actionGraph { filter:hue-rotate(92deg) saturate(2.4) brightness(1.08); }
 .wallet-zone .buy { color:#001a09 !important; }
+.territory-item em,
+.territory-item em[data-state="verified"],
+.territory-item em[data-state="learning"],
+.territory-item em[data-state="degrading"],
+.identity-console-head p,
+.manifest-route span small,
+.post-burn-flow small,
+.deployment-contract em {
+  color: var(--senmilo-green) !important;
+}
 
 @media (max-width: 760px) {
   .brand { width: 66px !important; min-width: 66px !important; padding: 6px 9px !important; }
