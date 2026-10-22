@@ -171,7 +171,7 @@ body:after { display:none !important; content:none !important; }
 #route-territories .territory-map:after {
   background: radial-gradient(circle at 51% 52%,rgba(0,255,87,.07),transparent 36%) !important;
 }
-#territoryCanvas { filter: hue-rotate(92deg) saturate(2.4) brightness(1.08); }
+#territoryCanvas { filter: none !important; }
 .territory-hud small,
 #route-territories .territory-item>em[data-state="observing"],
 .territory-policy b,
@@ -389,7 +389,62 @@ html, body, .screen, .route, .panel, .console-route,
   background: #000 !important;
 }
 
+/* Octopus signal field and orbital deployment seed. */
+#route-territories .territory-map:before {
+  content:"OCTOPUS SIGNAL FIELD";
+  position:absolute;z-index:3;right:18px;top:66px;
+  color:#496955;font:7px var(--term-mono);letter-spacing:.14em;
+}
+.identity-orbit {
+  position:relative;
+  height:164px;
+  overflow:hidden;
+  border-bottom:1px solid var(--senmilo-line) !important;
+  background:#000 !important;
+}
+.identity-orbit:before,
+.identity-orbit:after {
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  border:1px solid rgba(0,255,87,.2);
+  border-radius:50%;
+  transform:translate(-50%,-50%) rotate(-12deg);
+}
+.identity-orbit:before { width:238px;height:82px; }
+.identity-orbit:after { width:154px;height:126px;transform:translate(-50%,-50%) rotate(24deg); }
+.orbit-core {
+  position:absolute;z-index:2;left:50%;top:50%;
+  width:58px;height:58px;
+  display:grid;place-content:center;text-align:center;
+  border:1px solid var(--senmilo-green);
+  background:#000;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+.orbit-core span,.orbit-core b { display:block;transform:rotate(-45deg);font-family:var(--term-mono); }
+.orbit-core span { color:#5f7b68;font-size:7px; }
+.orbit-core b { margin-top:3px;color:var(--senmilo-green);font-size:9px; }
+.orbit-node {
+  position:absolute;z-index:3;width:9px;height:9px;
+  border:1px solid var(--senmilo-green);background:#000;
+  transform:rotate(45deg);box-shadow:0 0 9px rgba(0,255,87,.35);
+}
+.orbit-node:after { content:"";position:absolute;inset:2px;background:var(--senmilo-green); }
+.identity-orbit .node-a { left:18% !important;right:auto !important;top:31% !important;bottom:auto !important; }
+.identity-orbit .node-b { right:18% !important;left:auto !important;top:25% !important;bottom:auto !important; }
+.identity-orbit .node-c { left:22% !important;right:auto !important;bottom:22% !important;top:auto !important; }
+.identity-orbit .node-d { right:21% !important;left:auto !important;bottom:24% !important;top:auto !important; }
+.orbit-label { position:absolute;color:#779282;font:7px var(--term-mono);letter-spacing:.08em; }
+.identity-orbit .label-a { left:7% !important;right:auto !important;top:17% !important;bottom:auto !important; }
+.identity-orbit .label-b { right:7% !important;left:auto !important;top:13% !important;bottom:auto !important; }
+.identity-orbit .label-c { left:8% !important;right:auto !important;bottom:10% !important;top:auto !important; }
+.identity-orbit .label-d { right:7% !important;left:auto !important;bottom:12% !important;top:auto !important; }
+
 @media (max-width: 760px) {
+  #route-territories .territory-policy,
+  #route-territories .map-axis { display:none !important; }
+  #route-territories .territory-hud { left:18px !important;right:auto !important;top:70px !important; }
+  #route-territories .territory-map:before { display:none !important; }
   .brand img { transform:scale(1.4) !important; }
   #route-live .operator-stage>.panel-head {
     height:34px !important;
