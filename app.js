@@ -185,29 +185,43 @@ playVideo=(media,operator,wait)=>{
   }
   playVideoStream(media,operator,wait);
 };
-const drawTerritoriesLegacy=drawTerritories;
 drawTerritories=()=>{
-  drawTerritoriesLegacy();
   const canvas=$('#territoryCanvas');
   if(!canvas?.clientWidth)return;
   const context=canvas.getContext('2d'),density=Math.min(devicePixelRatio||1,2);
-  const centerX=canvas.clientWidth*.51,centerY=canvas.clientHeight*.52;
-  context.save();
-  context.setTransform(density,0,0,density,0,0);
-  context.fillStyle='#020603';
-  context.strokeStyle='#c86040';
-  context.lineWidth=1;
-  context.beginPath();
-  context.arc(centerX,centerY,27,0,Math.PI*2);
-  context.fill();
-  context.stroke();
-  context.fillStyle='#c86040';
-  context.textAlign='center';
-  context.font='700 8px monospace';
-  context.fillText('SENMILO',centerX,centerY-2);
-  context.fillStyle='#6d8172';
-  context.font='7px monospace';
-  context.fillText(`${R.data?.metrics?.activeOperators||0} ACTIVE`,centerX,centerY+10);
+  const width=canvas.clientWidth,height=canvas.clientHeight;
+  canvas.width=Math.floor(width*density);canvas.height=Math.floor(height*density);
+  context.setTransform(density,0,0,density,0,0);context.clearRect(0,0,width,height);
+  const green='#00ff57',dim='rgba(0,255,87,.22)',faint='rgba(0,255,87,.07)';
+  const centerX=width*.48,centerY=height*.42,items=R.data?.territories||[];
+  context.save();context.strokeStyle=faint;context.lineWidth=1;
+  for(let radius=56;radius<Math.max(width,height)*.62;radius+=58){
+    context.beginPath();context.arc(centerX,centerY,radius,Math.PI*1.05,Math.PI*1.95);context.stroke();
+  }
+  context.setLineDash([2,8]);
+  context.beginPath();context.moveTo(20,centerY);context.lineTo(width-20,centerY);context.stroke();
+  context.beginPath();context.moveTo(centerX,36);context.lineTo(centerX,height-34);context.stroke();
+  context.setLineDash([]);
+  const anchors=[[.12,.16],[.30,.23],[.68,.14],[.86,.24],[.16,.44],[.80,.45],[.10,.68],[.31,.60],[.67,.63],[.88,.70],[.24,.84],[.52,.80],[.76,.88]];
+  items.forEach((territory,index)=>{
+    const point=anchors[index%anchors.length],px=width*point[0],py=height*point[1];
+    const side=px<centerX?-1:1,controlX=centerX+side*(34+(index%3)*18),controlY=centerY+Math.sin(index*1.7)*42;
+    context.strokeStyle=territory.active_count?dim:'rgba(107,133,116,.15)';context.lineWidth=territory.active_count?1.25:.75;
+    context.beginPath();context.moveTo(centerX,centerY+12);context.bezierCurveTo(controlX,controlY,px-side*42,py,px,py);context.stroke();
+    context.save();context.translate(px,py);context.rotate(Math.PI/4);
+    context.fillStyle='#000';context.strokeStyle=territory.active_count?green:'#496052';context.lineWidth=1;
+    context.fillRect(-7,-7,14,14);context.strokeRect(-7,-7,14,14);
+    if(territory.active_count){context.fillStyle='rgba(0,255,87,.18)';context.fillRect(-3,-3,6,6)}
+    context.restore();
+    context.textAlign=px<centerX?'right':'left';const labelX=px+(px<centerX?-14:14);
+    context.fillStyle=territory.active_count?'#b7ffcb':'#77887c';context.font='700 8px monospace';context.fillText(String(territory.territory||'').toUpperCase(),labelX,py-3);
+    context.fillStyle='#55705e';context.font='7px monospace';context.fillText(`${territory.active_count||0}/${territory.operator_count||0} ONLINE`,labelX,py+9);
+  });
+  context.fillStyle='#000';context.strokeStyle=green;context.lineWidth=1.5;
+  context.beginPath();context.moveTo(centerX-28,centerY+3);context.quadraticCurveTo(centerX-25,centerY-33,centerX,centerY-37);context.quadraticCurveTo(centerX+25,centerY-33,centerX+28,centerY+3);context.quadraticCurveTo(centerX+18,centerY+25,centerX,centerY+27);context.quadraticCurveTo(centerX-18,centerY+25,centerX-28,centerY+3);context.closePath();context.fill();context.stroke();
+  context.fillStyle=green;context.beginPath();context.arc(centerX-9,centerY-7,2,0,Math.PI*2);context.arc(centerX+9,centerY-7,2,0,Math.PI*2);context.fill();
+  context.textAlign='center';context.fillStyle=green;context.font='700 9px monospace';context.fillText('SENMILO',centerX,centerY+9);
+  context.fillStyle='#789082';context.font='7px monospace';context.fillText(`${R.data?.metrics?.activeOperators||0} OCTOPUSES ONLINE`,centerX,centerY+40);
   context.restore();
 };
 const navLegacy=nav;
@@ -218,6 +232,11 @@ nav=id=>{
     activeItem.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   }
 };
+const legacyIdentityHash=$('.identity-hash');
+if(legacyIdentityHash){
+  legacyIdentityHash.className='identity-orbit';
+  legacyIdentityHash.innerHTML='<div class="orbit-core"><span>00</span><b>SEED</b></div><i class="orbit-node node-a"></i><i class="orbit-node node-b"></i><i class="orbit-node node-c"></i><i class="orbit-node node-d"></i><span class="orbit-label label-a">DISCOVER</span><span class="orbit-label label-b">LEARN</span><span class="orbit-label label-c">VERIFY</span><span class="orbit-label label-d">PUBLISH</span>';
+}
 $$('.core-mark img').forEach(image=>image.src='senmilo-logo-transparent.png');
 brandInterface();
 new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{
