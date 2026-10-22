@@ -78,7 +78,7 @@ await page.click('#connectWallet');
 await page.waitForSelector('#walletModal.open');
 await check('Wallet selector opens', () => page.$eval('#walletModal', node => node.getAttribute('aria-hidden') === 'false'));
 await page.click('#closeWalletModal');
-await check('Deploy identity logo centered', () => page.$eval('.identity-console-head', node => { const host=node.getBoundingClientRect(),logo=node.querySelector('.core-mark').getBoundingClientRect(); return Math.abs((host.left+host.width/2)-(logo.left+logo.width/2))<2; }));
+await check('Deploy identity logo uses transparent artwork', () => page.$eval('.identity-console-head .core-mark', node => getComputedStyle(node).backgroundColor === 'rgba(0, 0, 0, 0)' && node.querySelector('img').src.endsWith('/senmilo-logo-transparent.png')));
 
 await page.click('[data-route="manual"]');
 await page.click('[data-manual-target="security"]');
@@ -90,7 +90,8 @@ await check('Manual Deployment chapter works', () => page.$eval('#manual-deploym
 
 await check('GitHub source link configured', () => page.$eval('.senmilo-source', node => node.href === 'https://github.com/dellmodrun/senmilo'));
 await check('Senmilo branding configured', () => page.$eval('.wordmark', node => node.textContent === 'Senmilo'));
-await check('Senmilo logo configured', () => page.$eval('.brand img', node => node.getAttribute('src') === 'senmilo-logo.png'));
+await check('Senmilo transparent logo configured', () => page.$eval('.brand img', node => node.getAttribute('src') === 'senmilo-logo-transparent.png'));
+await check('Senmilo X link configured', () => page.$eval('.x-link', node => node.href === 'https://x.com/senmilodate'));
 await check('Octopus navigation configured', () => page.$eval('[data-route="operators"]', node => node.textContent === 'octopuses'));
 await check('SENMILO ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $SENMILO'));
 await check('Official CA is TBA', () => page.$eval('.ca-row code', node => node.textContent === 'TBA'));

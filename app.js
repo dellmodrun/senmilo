@@ -164,6 +164,53 @@ function openLive(o=R.operators[R.selected]){if(!o)return toast('No real Tardigr
 function nav(id){$$('.route').forEach(r=>r.classList.toggle('active',r.id===`route-${id}`));$$('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.route===id));history.replaceState(null,'',`#${id}`);if(id==='territories')setTimeout(drawTerritories,30);if(id==='live'&&!R.roomOperatorId)playVideo($('.crawl-browser-frame'),R.operators[R.selected]);else if(id!=='live')stopVideo($('.crawl-browser-frame'))}
 function init(){$$('[data-route]').forEach(b=>b.onclick=()=>nav(b.dataset.route));$$('[data-jump]').forEach(b=>b.onclick=()=>nav(b.dataset.jump));addEventListener('hashchange',()=>{const id=location.hash.slice(1);if($(`#route-${id}`))nav(id)});$('#prevOperator').onclick=()=>selectOperator(R.selected-1);$('#nextOperator').onclick=()=>selectOperator(R.selected+1);$('#watchLive').onclick=()=>openLive();$('#closeLive').onclick=closeLive;wb.onclick=()=>R.address?disconnect():walletOpen();$('#closeWalletModal').onclick=walletClose;wm.onclick=e=>{if(e.target===wm)walletClose()};registry.on(()=>{if(wm.classList.contains('open'))walletList()});$$('[data-wall-filter]').forEach(b=>b.onclick=()=>{R.filter=b.dataset.wallFilter;$$('[data-wall-filter]').forEach(x=>x.classList.toggle('active',x===b));renderWall()});$$('[data-wall-view]').forEach(b=>b.onclick=()=>{$$('[data-wall-view]').forEach(x=>x.classList.toggle('active',x===b));$('#monitorGrid').classList.toggle('board',b.dataset.wallView==='board')});$('#skillSearch').oninput=e=>renderSkills(e.target.value);$('#copyGatewayExample').onclick=async()=>{await navigator.clipboard.writeText($('#gatewayExample').textContent);toast('Gateway example copied')};$('#operatorAlias').oninput=e=>text('#previewAlias',e.target.value||'unnamed-tardigrade');$('#territorySelect').onchange=e=>text('#previewTerritory','territory / '+e.target.value.split(' ')[0].toLowerCase());$('#spawnButton').onclick=deploy;$('#tokenRefresh').onclick=refreshToken;$$('[data-manual-target]').forEach(b=>b.onclick=()=>{$$('[data-manual-target]').forEach(x=>x.classList.toggle('active',x===b));$$('.manual-topic').forEach(x=>x.classList.toggle('active',x.id===`manual-${b.dataset.manualTarget}`))});$$('[data-pending]').forEach(n=>n.onclick=async e=>{e.preventDefault();if(!n.dataset.copy)return toast(`${n.dataset.pending} is TBA`);await navigator.clipboard.writeText(n.dataset.copy);toast('contract copied')});addEventListener('resize',drawTerritories);addEventListener('keydown',e=>{if(e.key==='Escape'){walletClose();closeLive()}})}
 function graph(){const c=$('#actionGraph'),x=c?.getContext('2d');if(!x)return;function d(t){const w=c.clientWidth,h=c.clientHeight,p=Math.min(devicePixelRatio||1,2);if(c.width!==Math.floor(w*p)||c.height!==Math.floor(h*p)){c.width=w*p;c.height=h*p;x.setTransform(p,0,0,p,0,0)}x.clearRect(0,0,w,h);const n=Math.max(1,R.operators.length);x.strokeStyle='rgba(200,96,64,.18)';x.fillStyle='#c86040';for(let i=0;i<n;i++){const a=w*(.12+i%5*.18),b=h*(.22+Math.floor(i/5)*.42);if(i<n-1){const j=w*(.12+(i+1)%5*.18),k=h*(.22+Math.floor((i+1)/5)*.42);x.beginPath();x.moveTo(a,b);x.lineTo(j,k);x.stroke()}x.globalAlpha=.55+Math.sin(t*.001+i)*.25;x.fillRect(a-2,b-2,4,4)}x.globalAlpha=1;requestAnimationFrame(d)}requestAnimationFrame(d)}
+const stopVideoStream=stopVideo;
+stopVideo=media=>{
+  if(media?.tagName==='IMG'){
+    media.removeAttribute('src');
+    media.classList.remove('connected');
+    delete media.dataset.operatorId;
+    delete media.dataset.framePath;
+    return;
+  }
+  stopVideoStream(media);
+};
+const playVideoStream=playVideo;
+playVideo=(media,operator,wait)=>{
+  if(media?.tagName==='IMG'){
+    if(media.classList.contains('crawl-browser-frame'))setVerifiedMark('#stageVerifiedMark',operator);
+    if(media.id==='roomLiveFrame')setVerifiedMark('#roomVerifiedMark',operator);
+    swapFrame(media,operator,wait);
+    return;
+  }
+  playVideoStream(media,operator,wait);
+};
+const drawTerritoriesLegacy=drawTerritories;
+drawTerritories=()=>{
+  drawTerritoriesLegacy();
+  const canvas=$('#territoryCanvas');
+  if(!canvas?.clientWidth)return;
+  const context=canvas.getContext('2d'),density=Math.min(devicePixelRatio||1,2);
+  const centerX=canvas.clientWidth*.51,centerY=canvas.clientHeight*.52;
+  context.save();
+  context.setTransform(density,0,0,density,0,0);
+  context.fillStyle='#020603';
+  context.strokeStyle='#c86040';
+  context.lineWidth=1;
+  context.beginPath();
+  context.arc(centerX,centerY,27,0,Math.PI*2);
+  context.fill();
+  context.stroke();
+  context.fillStyle='#c86040';
+  context.textAlign='center';
+  context.font='700 8px monospace';
+  context.fillText('SENMILO',centerX,centerY-2);
+  context.fillStyle='#6d8172';
+  context.font='7px monospace';
+  context.fillText(`${R.data?.metrics?.activeOperators||0} ACTIVE`,centerX,centerY+10);
+  context.restore();
+};
+$$('.core-mark img').forEach(image=>image.src='senmilo-logo-transparent.png');
 brandInterface();
 new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{
   if(node.nodeType===Node.TEXT_NODE){if(/tard|TADM/i.test(node.nodeValue))node.nodeValue=brandCopy(node.nodeValue);}

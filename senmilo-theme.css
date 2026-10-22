@@ -31,11 +31,13 @@
 
 html, body, .screen, .route, .panel, .console-route, .live-room, .wallet-modal { background-color: var(--senmilo-black) !important; }
 body { color: var(--senmilo-muted) !important; }
-.x-link, .hf-link { display: none !important; }
+.hf-link { display: none !important; }
+.wallet-zone .x-link { display: grid !important; }
 .github-link svg { fill: currentColor; }
-.brand { overflow: hidden; background: #000 !important; }
-.brand .cennomo-logo-small { width: 52px !important; height: 52px !important; border: 0 !important; background: #000 !important; }
-.brand img, .core-mark img { width: 100% !important; height: 100% !important; object-fit: cover !important; filter: none !important; }
+.brand { width: 82px !important; min-width: 82px !important; padding: 6px 13px !important; overflow: visible; background: #000 !important; }
+.brand .cennomo-logo-small { width: 54px !important; height: 46px !important; overflow: visible !important; border: 0 !important; background: transparent !important; }
+.brand img { width: 100% !important; height: 100% !important; object-fit: contain !important; filter: drop-shadow(0 0 7px rgba(0,255,87,.2)) !important; }
+.core-mark img { width: 100% !important; height: 100% !important; inset: 0 !important; object-fit: contain !important; transform: none !important; filter: none !important; }
 
 .nav-item.active, .nav-item:hover, .buy, .spawn-button:not(:disabled),
 .hero-actions .primary, .wallet-option:hover, .skill-row button:hover {
@@ -101,6 +103,152 @@ body { color: var(--senmilo-muted) !important; }
 ::-webkit-scrollbar-track { background: #000; }
 ::-webkit-scrollbar-thumb { border-color: #000; background: #174528; }
 
+/* Remove the former coral palette from every route and generated layer. */
+body:after,
+.hero,
+.feed-awaiting:before,
+#route-territories .territory-map,
+.identity-hash {
+  background-image: none !important;
+}
+.hero-actions button:hover,
+.hero-actions a:hover,
+.operator-core:after,
+.verified-stream-mark,
+.operator-monitor[data-state="verified"] .feed-stage:before {
+  box-shadow: 0 0 20px rgba(0,255,87,.16) !important;
+}
+.operator-monitor>footer button,
+#route-skills .skill-search button,
+#route-skills .skill-row button,
+.spawn-steps li.active,
+#route-manual .manual-index button.active {
+  border-color: var(--senmilo-line) !important;
+  background: rgba(0,255,87,.06) !important;
+  color: var(--senmilo-green) !important;
+}
+#route-deploy .burn-card,
+.monitor-data,
+.table-wrap tbody tr:hover td,
+.palm-visual span {
+  border-color: var(--senmilo-line) !important;
+  background: #010502 !important;
+}
+.burn-card span,
+.burn-card em,
+.preview-foot b,
+.treasury-checklist b {
+  color: var(--senmilo-muted) !important;
+}
+.health i,
+.alloc-row i {
+  background: linear-gradient(90deg,var(--senmilo-green) var(--health,100%),#142018 var(--health,100%)) !important;
+  filter: none !important;
+}
+.palm-visual i,
+.palm-visual span,
+.manifest-checks span i,
+.treasury-checklist i {
+  border-color: var(--senmilo-line) !important;
+  box-shadow: none !important;
+}
+.preview-foot i,
+.protocol-loop i,
+.treasury-checklist span[data-ready="true"] i {
+  background: var(--senmilo-green) !important;
+  border-color: var(--senmilo-green) !important;
+  box-shadow: 0 0 8px rgba(0,255,87,.45) !important;
+}
+
+/* Territory map: neutral black structure with the Senmilo green signal. */
+#route-territories .territory-map {
+  background-color: #000 !important;
+  background-image:
+    linear-gradient(rgba(0,255,87,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,87,.018) 1px,transparent 1px) !important;
+}
+#route-territories .territory-map:after {
+  background: radial-gradient(circle at 51% 52%,rgba(0,255,87,.07),transparent 36%) !important;
+}
+#territoryCanvas { filter: hue-rotate(92deg) saturate(2.4) brightness(1.08); }
+.territory-hud small,
+#route-territories .territory-item>em[data-state="observing"],
+.territory-policy b,
+.map-legend .verified,
+.map-legend .learning,
+.map-legend .repairing {
+  color: var(--senmilo-green) !important;
+}
+
+/* Transparent logo treatment in the deployment manifest. */
+.identity-console .core-mark,
+.identity-console-head>.core-mark {
+  width: 72px !important;
+  height: 72px !important;
+  overflow: visible !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.identity-console-head {
+  grid-template-columns: 76px 1fr 32px !important;
+}
+
+/* Force all inherited warm surfaces and indicators into the brand system. */
+.topbar,
+.wallet-zone button,
+.wallet-zone a,
+.ca-row,
+.reward-note,
+.hero-actions .secondary,
+.operator-stage,
+.panel-head,
+.browser-chrome,
+.crawl-tail,
+.stage-foot,
+.table-wrap th,
+.stream-head,
+.route-command,
+.wall-controls,
+.operator-monitor,
+.monitor-screen,
+.monitor-url,
+.watch-live,
+.live-proof,
+.vision-badge {
+  background-color: #000 !important;
+}
+.panel-head,
+.browser-chrome,
+.crawl-tail,
+.stage-foot,
+.watch-live,
+.live-proof,
+.vision-badge {
+  border-color: var(--senmilo-line) !important;
+}
+.watch-live,
+.live-proof b,
+.live-proof i,
+.vision-badge span,
+.vision-badge i,
+.vision-route span,
+.vision-route i {
+  color: var(--senmilo-green) !important;
+  border-color: var(--senmilo-green) !important;
+}
+.live-proof i,
+.vision-badge i,
+.vision-route i {
+  background: var(--senmilo-green) !important;
+}
+.browser-chrome i:nth-child(1) { background:#00ff57 !important; }
+.browser-chrome i:nth-child(2) { background:#83ffa9 !important; }
+.browser-chrome i:nth-child(3) { background:#1d6b37 !important; }
+#actionGraph { filter:hue-rotate(92deg) saturate(2.4) brightness(1.08); }
+.wallet-zone .buy { color:#001a09 !important; }
+
 @media (max-width: 760px) {
-  .brand .cennomo-logo-small { width: 42px !important; height: 42px !important; }
+  .brand { width: 66px !important; min-width: 66px !important; padding: 6px 9px !important; }
+  .brand .cennomo-logo-small { width: 48px !important; height: 42px !important; }
 }

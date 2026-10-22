@@ -9,7 +9,7 @@ mkdirSync(output, { recursive: true });
 
 const assets = [
   'index.html', 'app.js', 'styles.css', 'live-crawlnet.css', 'console-polish.css', 'tardumo-terminal.css',
-  'senmilo-theme.css', 'senmilo-logo.png'
+  'senmilo-theme.css', 'senmilo-logo.png', 'senmilo-logo-transparent.png'
 ];
 for (const asset of assets) cpSync(resolve(root, asset), resolve(output, asset));
 
