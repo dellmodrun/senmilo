@@ -34,9 +34,9 @@ body { color: var(--senmilo-muted) !important; }
 .hf-link { display: none !important; }
 .wallet-zone .x-link { display: grid !important; }
 .github-link svg { fill: currentColor; }
-.brand { width: 82px !important; min-width: 82px !important; padding: 6px 13px !important; overflow: visible; background: #000 !important; }
-.brand .cennomo-logo-small { width: 54px !important; height: 46px !important; overflow: visible !important; border: 0 !important; background: transparent !important; }
-.brand img { width: 100% !important; height: 100% !important; object-fit: contain !important; filter: drop-shadow(0 0 7px rgba(0,255,87,.2)) !important; }
+.brand { width: 68px !important; min-width: 68px !important; height: 44px !important; padding: 2px 8px !important; place-items: center !important; overflow: hidden !important; background: #000 !important; }
+.brand .cennomo-logo-small { width: 50px !important; height: 38px !important; overflow: hidden !important; border: 0 !important; background: transparent !important; }
+.brand img { width: 100% !important; height: 100% !important; object-fit: contain !important; transform: scale(1.14) !important; filter: drop-shadow(0 0 7px rgba(0,255,87,.2)) !important; }
 .core-mark img { width: 100% !important; height: 100% !important; inset: 0 !important; object-fit: contain !important; transform: none !important; filter: none !important; }
 
 .nav-item.active, .nav-item:hover, .buy, .spawn-button:not(:disabled),
@@ -111,6 +111,7 @@ body:after,
 .identity-hash {
   background-image: none !important;
 }
+body:after { display:none !important; content:none !important; }
 .hero-actions button:hover,
 .hero-actions a:hover,
 .operator-core:after,
@@ -257,8 +258,159 @@ body:after,
 .deployment-contract em {
   color: var(--senmilo-green) !important;
 }
+.manual-doc p,
+.manual-facts p,
+.manual-code p {
+  color: #91a398 !important;
+}
+.manual-index button:before { color:var(--senmilo-green) !important; }
 
 @media (max-width: 760px) {
-  .brand { width: 66px !important; min-width: 66px !important; padding: 6px 9px !important; }
-  .brand .cennomo-logo-small { width: 48px !important; height: 42px !important; }
+  .brand { width: 62px !important; min-width: 62px !important; height:44px !important; padding:3px 7px !important; }
+  .brand .cennomo-logo-small { width:46px !important; height:36px !important; }
+  .nav {
+    min-width:0 !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    scroll-behavior:smooth;
+    scrollbar-width:none;
+  }
+  .nav::-webkit-scrollbar { display:none; }
+  .nav-item { min-width:88px !important; flex:0 0 auto !important; }
+  #route-live .crawl-hero:before,
+  #route-live .crawl-hero:after { display:none !important; content:none !important; }
+  #route-live .operator-stage>.panel-head .feed-label { display:none !important; }
+  #route-live .operator-stage>.stage-title {
+    left:103px !important;
+    right:10px !important;
+    width:auto !important;
+    max-width:none !important;
+    overflow:hidden !important;
+  }
+  #route-live .operator-stage>.stage-title b {
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  #route-live .operator-stage>.stage-title span { display:none !important; }
+  #route-deploy .section-head {
+    min-height:62px !important;
+    height:auto !important;
+    align-items:center !important;
+    gap:12px !important;
+  }
+  #route-deploy .section-head span { max-width:210px; line-height:1.45; }
+  #route-deploy .spawn-steps li { gap:5px; padding:0 8px !important; }
+  #route-deploy .spawn-steps li b { margin-right:3px; }
+  #route-manual .manual-index { scroll-snap-type:x proximity; }
+  #route-manual .manual-index button { scroll-snap-align:start; }
+}
+
+/* Final surface pass: every structural surface is true black. */
+html, body, .screen, .route, .panel, .console-route,
+.topbar, .brand, .nav, .nav-item, .wallet-zone,
+.wallet-zone button, .wallet-zone a:not(.buy),
+.crawlnet-live-grid, .crawl-hero, .operator-stage, .network, .stream,
+.panel-head, .section-head, .route-command, .wall-controls,
+.ca-row, .reward-note, .hero-actions .secondary, .browser-chrome,
+.crawl-tail, .stage-foot, .network-summary, .table-wrap, .table-wrap th,
+.stream-head, .event-stream, .event,
+.operator-wall, .monitor-grid, .operator-monitor, .monitor-screen, .monitor-url,
+.skills-panel, .skill-table, .skill-row, .skill-admission-strip,
+.territory-layout, .territory-map, .territory-feed, .territory-item,
+.territory-hud, .territory-policy, .map-legend,
+.treasury-layout, .treasury-main, .treasury-side, .settlement,
+.treasury-total, .treasury-facts, .treasury-principles, .allocation,
+.token-chain-panel, .treasury-address-card, .pool-total,
+.contribution-weights, .treasury-checklist, .fee-split,
+.spawn-layout, .spawn-form, .spawn-preview, .spawn-steps,
+.field select, .field input, .burn-card, .identity-console,
+.deploy-readiness, .deployment-contract, .manifest-checks, .post-burn-flow,
+.manual-layout, .manual-index, .manual-index button, .manual-doc,
+.manual-facts article, .manual-detail-grid article, .manual-code,
+.state-definitions, .allocation-ledger, .protocol-loop span,
+.gateway-layout, .gateway-main, .gateway-tools, .gateway-live,
+.gateway-endpoints, .gateway-code, .gateway-audit, .gateway-call-flow, .gateway-tool,
+.live-room, .live-room-head, .live-room-foot, .broadcast, .room-side,
+.room-live-layer, .wallet-dialog {
+  background-color: #000 !important;
+  background-image: none !important;
+}
+#route-live .crawlnet-live-grid,
+#route-live .crawl-hero,
+#route-live .operator-stage,
+#route-live .ca-row,
+#route-live .reward-note,
+#route-live .operator-stage>.stage-foot,
+#route-operators .operator-wall,
+#route-skills .skill-search input,
+#route-skills .skill-row.header,
+#route-gateway .gateway-main article,
+#route-gateway #copyGatewayExample,
+#route-treasury #tokenRefresh,
+#route-treasury .treasury-event,
+#route-deploy .burn-card,
+.statusbar,
+.toast {
+  background-color:#000 !important;
+  background-image:none !important;
+}
+.wallet-modal { background: rgba(0,0,0,.94) !important; }
+.nav-item.active,
+.wallet-zone .buy,
+.hero-actions .primary,
+.spawn-button:not(:disabled) {
+  background: var(--senmilo-green) !important;
+}
+.wall-filters button.active,
+.view-switch button.active,
+.manual-index button.active,
+.spawn-steps li.active {
+  background: rgba(0,255,87,.08) !important;
+}
+.spawn-button:disabled { background:#000 !important; }
+.brand {
+  border: 0 !important;
+  border-right: 1px solid var(--senmilo-line) !important;
+}
+.brand img { transform: scale(1.34) !important; }
+.manual-doc, .manual-doc p, .manual-facts p, .manual-code p,
+.genesis-notice, .genesis-notice p, .gateway-code pre {
+  color: #91a398 !important;
+}
+.manual-facts b, .genesis-notice b, .manual-doc h3,
+.doc-kicker, .gateway-audit b {
+  color: var(--senmilo-green) !important;
+}
+.genesis-notice, .manual-facts article, .manual-detail-grid article,
+.manual-code, .gateway-code, .gateway-audit {
+  border-color: var(--senmilo-line) !important;
+  background: #000 !important;
+}
+
+@media (max-width: 760px) {
+  .brand img { transform:scale(1.4) !important; }
+  #route-live .operator-stage>.panel-head {
+    height:34px !important;
+  }
+  #route-live .operator-stage>.stage-title {
+    top:34px !important;
+    left:7px !important;
+    right:7px !important;
+    width:auto !important;
+    height:29px !important;
+    padding:0 9px !important;
+    display:flex !important;
+    align-items:center !important;
+    border-bottom:1px solid var(--senmilo-line) !important;
+    background:#000 !important;
+  }
+  #route-live .operator-stage>.browser-feed {
+    top:63px !important;
+  }
+  #route-live .operator-stage[data-view="browser"] #actionGraph {
+    inset:63px 7px 92px !important;
+    height:calc(100% - 155px) !important;
+  }
 }
