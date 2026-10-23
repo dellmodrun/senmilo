@@ -1,7 +1,6 @@
 import puppeteer from 'puppeteer-core';
 
 const base = process.env.CENNOMO_TEST_URL || 'http://127.0.0.1:4185/';
-const tokenCa = '29wma6ysVcutrDENERoSGkQvwcTpnruzaK6FHY2zpump';
 const executablePath = process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const browser = await puppeteer.launch({ headless: true, executablePath, args: ['--disable-gpu', '--no-first-run'] });
 const page = await browser.newPage();
@@ -62,14 +61,14 @@ await check('Treasury value rendered', () => page.$eval('.treasury-total strong'
 await check('Treasury events rendered', () => page.$eval('#treasuryEvents', node => node.children.length > 0));
 await check('Treasury explorer hidden while address is TBA', () => page.$eval('#treasuryExplorer', node => node.hidden));
 await check('Treasury reports real settlement counters', () => page.$eval('#treasurySettlements', node => /^\d+$/.test(node.textContent.trim())));
-await check('Treasury reports token verification pending', () => page.$eval('#treasuryPhase', node => node.textContent === 'TOKEN CHECKING'));
-await check('Treasury publishes official CA', () => page.$eval('#treasuryMint', (node, expected) => node.textContent === expected, tokenCa));
-await check('Treasury links official Pump.fun coin', () => page.$eval('#treasuryPumpfun', (node, expected) => node.href === `https://pump.fun/coin/${expected}`, tokenCa));
-await check('Token explorer links official CA', () => page.$eval('#tokenExplorer', (node, expected) => !node.hidden && node.href === `https://solscan.io/token/${expected}`, tokenCa));
-await check('Token profile reports verification pending', () => page.$eval('#tokenChainStatus', node => node.textContent === 'CHECKING SOLANA'));
-await check('Token profile awaits chain data', () => page.$$eval('#tokenName,#tokenSymbol', nodes => nodes.every(node => node.textContent === 'TBA')) && page.$$eval('#tokenProgram,#tokenSupply,#tokenMintAuthority,#tokenFreezeAuthority,#tokenSlot', nodes => nodes.every(node => node.textContent === 'CHECKING')));
+await check('Treasury reports token not configured', () => page.$eval('#treasuryPhase', node => node.textContent === 'NOT CONFIGURED'));
+await check('Treasury publishes CA as TBA', () => page.$eval('#treasuryMint', node => node.textContent === 'TBA'));
+await check('Treasury links Pump.fun homepage', () => page.$eval('#treasuryPumpfun', node => node.href === 'https://pump.fun/'));
+await check('Token explorer hidden while CA is TBA', () => page.$eval('#tokenExplorer', node => node.hidden));
+await check('Token profile reports CA as TBA', () => page.$eval('#tokenChainStatus', node => node.textContent === 'TOKEN CA · TBA'));
+await check('Token profile values are TBA', () => page.$$eval('#tokenName,#tokenSymbol,#tokenProgram,#tokenSupply,#tokenMintAuthority,#tokenFreezeAuthority,#tokenSlot', nodes => nodes.every(node => node.textContent === 'TBA')));
 await page.click('#tokenRefresh');
-await check('Manual token refresh keeps pending state', () => page.$eval('#tokenSlot', node => node.textContent === 'CHECKING'));
+await check('Manual token refresh stays locked while CA is TBA', () => page.$eval('#tokenSlot', node => node.textContent === 'TBA'));
 await check('Treasury address is TBA', () => page.$eval('#treasuryWallet', node => node.textContent === 'TBA'));
 await check('Treasury heading is neutral', () => page.$eval('#route-treasury .section-head b', node => node.textContent === 'NETWORK TREASURY'));
 
@@ -95,8 +94,8 @@ await check('Senmilo transparent logo configured', () => page.$eval('.brand img'
 await check('Senmilo X link configured', () => page.$eval('.x-link', node => node.href === 'https://x.com/senmilodate'));
 await check('Octopus navigation configured', () => page.$eval('[data-route="operators"]', node => node.textContent === 'octopuses'));
 await check('SEN ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $SEN'));
-await check('Official CA is configured', () => page.$eval('.ca-row code', (node, expected) => node.textContent === expected, tokenCa));
-await check('Pump link uses official CA', () => page.$eval('.buy', (node, expected) => node.href === `https://pump.fun/coin/${expected}`, tokenCa));
+await check('Official CA is TBA', () => page.$eval('.ca-row code', node => node.textContent === 'TBA'));
+await check('Pump link uses homepage while CA is TBA', () => page.$eval('.buy', node => node.href === 'https://pump.fun/'));
 
 await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
 await page.goto(`${base}#live`, { waitUntil: 'networkidle2', timeout: 30_000 });
