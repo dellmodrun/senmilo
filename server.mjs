@@ -87,7 +87,7 @@ async function refreshTokenChainState(force = false) {
       rpcStatus: 'healthy',
       mint: mint.toBase58(),
       name: metadata.name || 'SENMILO AGENT',
-      symbol: metadata.symbol || 'SENMILO',
+      symbol: metadata.symbol || 'SEN',
       metadataUri: metadata.uri || null,
       program,
       programId,
@@ -957,7 +957,7 @@ async function verifyBurn(signature, wallet) {
     const uiAmount = Number(info.tokenAmount?.uiAmountString ?? info.tokenAmount?.uiAmount ?? NaN);
     return info.authority === wallet && info.mint === config.tokenMint && uiAmount >= config.burnAmount;
   });
-  if (!valid) throw Object.assign(new Error('transaction does not contain the required SENMILO burn'), { status: 409 });
+  if (!valid) throw Object.assign(new Error('transaction does not contain the required SEN burn'), { status: 409 });
   return transaction;
 }
 

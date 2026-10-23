@@ -93,7 +93,7 @@ await check('Senmilo branding configured', () => page.$eval('.wordmark', node =>
 await check('Senmilo transparent logo configured', () => page.$eval('.brand img', node => node.getAttribute('src') === 'senmilo-logo-transparent.png'));
 await check('Senmilo X link configured', () => page.$eval('.x-link', node => node.href === 'https://x.com/senmilodate'));
 await check('Octopus navigation configured', () => page.$eval('[data-route="operators"]', node => node.textContent === 'octopuses'));
-await check('SEMO ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $SEMO'));
+await check('SEN ticker configured', () => page.$eval('.buy', node => node.textContent === 'buy $SEN'));
 await check('Official CA is TBA', () => page.$eval('.ca-row code', node => node.textContent === 'TBA'));
 await check('Pump link uses homepage while CA is TBA', () => page.$eval('.buy', node => node.href === 'https://pump.fun/'));
 
